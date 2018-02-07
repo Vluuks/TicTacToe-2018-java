@@ -5,52 +5,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Instantiate two-dimensional array to store the tiles
-    // This will initialize to 0 by default
-    int[][] tiles = new int[3][3];
-    Boolean playerOneTurn;
+    GamePlay gamePlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set player one's turn to true
-        playerOneTurn = true;
-    }
+        GridLayout tileLayout = findViewById(R.id.tileLayout);
 
-    public void validateTile(int row, int column, View view) {
-
-        int tile = tiles[row][column];
-
-        // If the tile is empty
-        if(tile == 0) {
-
-            // Grab the button
-            Button b = (Button) view;
-
-            if(playerOneTurn) {
-                // make X
-                tiles[row][column] = 1;
-                b.setText("X");
-            }
-            else {
-                tiles[row][column] = 2;
-                b.setText("O");
-            }
-
-            // Change turns
-            playerOneTurn = !playerOneTurn;
-        }
-        else {
-            Toast toast=Toast.makeText(getApplicationContext(),"You can't do that",Toast.LENGTH_SHORT);
-            toast.setMargin(50,50);
-            toast.show();
-        }
+        gamePlay = new GamePlay(getApplicationContext(), tileLayout);
 
     }
 
@@ -63,32 +32,47 @@ public class MainActivity extends AppCompatActivity {
         switch(view.getId()){
 
             case R.id.button0:
-                validateTile(0, 0, view);
+                gamePlay.validateTile(0, 0, view);
                 break;
             case R.id.button1:
-                validateTile(0, 1, view);
+                gamePlay.validateTile(0, 1, view);
                 break;
             case R.id.button2:
-                validateTile(0, 2, view);
+                gamePlay.validateTile(0, 2, view);
                 break;
             case R.id.button3:
-                validateTile(1, 0, view);
+                gamePlay.validateTile(1, 0, view);
                 break;
             case R.id.button4:
-                validateTile(1, 1, view);
+                gamePlay.validateTile(1, 1, view);
                 break;
             case R.id.button5:
-                validateTile(1, 2, view);
+                gamePlay.validateTile(1, 2, view);
                 break;
             case R.id.button6:
-                validateTile(2, 0, view);
+                gamePlay.validateTile(2, 0, view);
                 break;
             case R.id.button7:
-                validateTile(2, 1, view);
+                gamePlay.validateTile(2, 1, view);
                 break;
             case R.id.button8:
-                validateTile(2, 2, view);
+                gamePlay.validateTile(2, 2, view);
                 break;
         }
+
+        // Check if someone won, if draw, reset
+        // This is so clunky
+        int winner = gamePlay.checkForWinner();
+            if(winner == 1 || winner == 2) {
+                Toast toast = Toast.makeText(getApplicationContext(),"Player " + String.valueOf(winner)+ " wins!",Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            else if(winner == 0) {
+                Toast toast = Toast.makeText(getApplicationContext(),"Nobody wins!! You are all losers.",Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            else {
+                Log.d("MainActivity", "no winner (yet)");
+            }
     }
 }
