@@ -11,13 +11,14 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     GamePlay gamePlay;
+    GridLayout tileLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        GridLayout tileLayout = findViewById(R.id.tileLayout);
+        tileLayout = findViewById(R.id.tileLayout);
 
         gamePlay = new GamePlay(getApplicationContext(), tileLayout);
 
@@ -63,16 +64,23 @@ public class MainActivity extends AppCompatActivity {
         // Check if someone won, if draw, reset
         // This is so clunky
         int winner = gamePlay.checkForWinner();
-            if(winner == 1 || winner == 2) {
-                Toast toast = Toast.makeText(getApplicationContext(),"Player " + String.valueOf(winner)+ " wins!",Toast.LENGTH_SHORT);
-                toast.show();
-            }
-            else if(winner == 0) {
-                Toast toast = Toast.makeText(getApplicationContext(),"Nobody wins!! You are all losers.",Toast.LENGTH_SHORT);
-                toast.show();
-            }
-            else {
-                Log.d("MainActivity", "no winner (yet)");
-            }
+        if(winner == 1 || winner == 2) {
+            Toast toast = Toast.makeText(getApplicationContext(),"Player " + String.valueOf(winner)+ " wins!",Toast.LENGTH_LONG);
+            toast.show();
+
+        }
+        else if(winner == 0) {
+            Toast toast = Toast.makeText(getApplicationContext(),"Nobody wins!! You are all losers.",Toast.LENGTH_LONG);
+            toast.show();
+
+        }
+        else {
+            Log.d("MainActivity", "no winner (yet)");
+        }
+    }
+
+    public void resetGame(View view) {
+        gamePlay.resetGame();
+        recreate();
     }
 }
