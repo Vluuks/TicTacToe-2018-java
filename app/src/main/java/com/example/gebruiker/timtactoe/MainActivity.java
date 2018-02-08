@@ -1,8 +1,12 @@
 package com.example.gebruiker.timtactoe;
 
+import android.service.quicksettings.Tile;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
@@ -11,75 +15,99 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     GamePlay gamePlay;
-    GridLayout tileLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tileLayout = findViewById(R.id.tileLayout);
-
-        gamePlay = new GamePlay(getApplicationContext(), tileLayout);
-
+        gamePlay = new GamePlay();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.reset_menu, menu);
+        return true;
+    }
+
+    /* Passes coordinates of button in gridview to GamePlay class. */
     public void tileClicked(View view) {
 
-        String id = Integer.toString(view.getId());
-        Log.d("MainActivity", id);
+        TileType tileType;
 
         // Check which tile was clicked, and update our behind the scenes array accordingly
         switch(view.getId()){
-
             case R.id.button0:
-                gamePlay.validateTile(0, 0, view);
+                tileType = gamePlay.validateTile(0, 0);
                 break;
             case R.id.button1:
-                gamePlay.validateTile(0, 1, view);
+                tileType = gamePlay.validateTile(0, 1);
                 break;
             case R.id.button2:
-                gamePlay.validateTile(0, 2, view);
+                tileType = gamePlay.validateTile(0, 2);
                 break;
             case R.id.button3:
-                gamePlay.validateTile(1, 0, view);
+                tileType = gamePlay.validateTile(1, 0);
                 break;
             case R.id.button4:
-                gamePlay.validateTile(1, 1, view);
+                tileType = gamePlay.validateTile(1, 1);
                 break;
             case R.id.button5:
-                gamePlay.validateTile(1, 2, view);
+                tileType = gamePlay.validateTile(1, 2);
                 break;
             case R.id.button6:
-                gamePlay.validateTile(2, 0, view);
+                tileType = gamePlay.validateTile(2, 0);
                 break;
             case R.id.button7:
-                gamePlay.validateTile(2, 1, view);
+                tileType = gamePlay.validateTile(2, 1);
                 break;
             case R.id.button8:
-                gamePlay.validateTile(2, 2, view);
+                tileType = gamePlay.validateTile(2, 2);
                 break;
+            default:
+                tileType = TileType.INVALID;
         }
 
-        // Check if someone won, if draw, reset
-        // This is so clunky
-        int winner = gamePlay.checkForWinner();
-        if(winner == 1 || winner == 2) {
-            Toast toast = Toast.makeText(getApplicationContext(),"Player " + String.valueOf(winner)+ " wins!",Toast.LENGTH_LONG);
-            toast.show();
+        // Update the UI
+        updateTile(view, tileType);
 
+        // Check if someone won or if it's a draw
+        GameState gameState = gamePlay.checkForWinner();
+        if(gameState == GameState.PLAYER_ONE || gameState == GameState.PLAYER_TWO) {
+            makeToast(gameState.toString() + " is victorious!");
         }
-        else if(winner == 0) {
-            Toast toast = Toast.makeText(getApplicationContext(),"Nobody wins!! You are all losers.",Toast.LENGTH_LONG);
-            toast.show();
-
+        else if(gameState == GameState.DRAW) {
+            makeToast("Nobody wins! It's a draw.");
         }
         else {
             Log.d("MainActivity", "no winner (yet)");
         }
     }
 
-    public void resetGame(View view) {
+    /* Updates the "tile" to show the correct sign. */
+    public void updateTile(View view, TileType tileType){
+
+        Button b = (Button) view;
+
+        if (tileType == TileType.CIRCLE) {
+            b.setText("O");
+        }
+        else if (tileType == TileType.CROSS) {
+            b.setText("X");
+        }
+        else {
+            makeToast("That's an illegal move.");
+        }
+    }
+
+    public void makeToast(String toastText) {
+        Toast toast = Toast.makeText(getApplicationContext(), toastText,Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    /* Calls reset from game class and remakes Activity after. */
+    public void resetGame(MenuItem item) {
         gamePlay.resetGame();
         recreate();
     }

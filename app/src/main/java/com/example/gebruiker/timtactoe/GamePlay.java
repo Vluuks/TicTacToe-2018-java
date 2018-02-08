@@ -1,10 +1,7 @@
 package com.example.gebruiker.timtactoe;
 
 import android.content.Context;
-import android.view.View;
-import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.Toast;
 
 /**
  * Created by Gebruiker on 7-2-2018.
@@ -23,11 +20,7 @@ public class GamePlay {
     // Global so win function can access them
     int tileRow, tileColumn;
 
-    public GamePlay(Context context, GridLayout tileLayout){
-
-        // Initialize array and set player one's turn to true
-        this.context = context;
-        this.tileLayout = tileLayout;
+    public GamePlay(){
 
         tiles = new int[BOARD_SIZE][BOARD_SIZE];
 
@@ -36,29 +29,27 @@ public class GamePlay {
         movesPlayed = 0;
     }
 
-    public void validateTile(int clickedTileRow, int clickedTileColumn, View view) {
+    /* Checks whether to mark a X or O or if the move is illegal. Returns the
+     * appropriate tile type. */
+    public TileType validateTile(int clickedTileRow, int clickedTileColumn) {
 
         tileRow = clickedTileRow;
         tileColumn = clickedTileColumn;
 
         int tile = tiles[tileRow][tileColumn];
+        TileType type;
 
-        // If the tile is empty
+        // If the tile is empty in our array
         if(tile == 0) {
-
-            // Grab the button
-            Button b = (Button) view;
 
             // Mark tiles in array with player number
             if(playerOneTurn) {
-                // X
                 tiles[tileRow][tileColumn] = 1;
-                b.setText("X");
+                type = TileType.CROSS;
             }
             else {
-                // O
                 tiles[tileRow][tileColumn] = 2;
-                b.setText("O");
+                type = TileType.CIRCLE;
             }
 
             // Add move and change turns
@@ -66,36 +57,42 @@ public class GamePlay {
             playerOneTurn = !playerOneTurn;
 
         }
+        // If it's already taken, the move is illegal
         else {
-            Toast toast=Toast.makeText(context,"You can't do that",Toast.LENGTH_SHORT);
-            toast.setMargin(50,50);
-            toast.show();
+            type = TileType.INVALID;
         }
 
+        return type;
     }
 
+    /* Resets the board to empty again and makes it player one's turn. */
     public void resetGame(){
 
         tiles = new int[BOARD_SIZE][BOARD_SIZE];
         playerOneTurn = true;
-        tileLayout.invalidate();
 
     }
 
-    public int checkForWinner() {
+    /* Checks if win-condition is met based on the last valid tile that was touched,
+    * checking its diagonal(s), row and column. */
+    public GameState checkForWinner() {
 
         int currentPlayerTile;
+        GameState winner;
 
         // Check who was the last one to mark a tile
         if(!playerOneTurn) {
             // X
             // Then player one was the last one
             currentPlayerTile = 1;
+            winner = GameState.PLAYER_ONE;
+
         }
         else {
             // O
             // Player two was the last one
             currentPlayerTile = 2;
+            winner = GameState.PLAYER_TWO;
         }
 
         // Check coordinates in row of last played tile
@@ -104,7 +101,7 @@ public class GamePlay {
                 break;
             }
             if(i == BOARD_SIZE - 1) {
-                return currentPlayerTile;
+                return winner;
             }
         }
 
@@ -114,7 +111,7 @@ public class GamePlay {
                 break;
             }
             if(i == BOARD_SIZE - 1) {
-                return currentPlayerTile;
+                return winner;
             }
         }
 
@@ -125,7 +122,7 @@ public class GamePlay {
                     break;
                 }
                 if(i == BOARD_SIZE - 1) {
-                    return currentPlayerTile;
+                    return winner;
                 }
             }
 
@@ -139,14 +136,16 @@ public class GamePlay {
                     break;
                 }
                 if(i == BOARD_SIZE - 1) {
-                    return currentPlayerTile;
+                    return winner;
                 }
             }
         }
 
+        // If nobody has won yet at 9 moves, it's a draw
         if(movesPlayed == 9){
-            return 0;
+            return GameState.DRAW;
         }
-        return -1;
+
+        return GameState.IN_PROGRESS;
     }
 }
