@@ -15,13 +15,22 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     GamePlay gamePlay;
+    GridLayout gl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        gamePlay = new GamePlay();
+        gl = findViewById(R.id.tileLayout);
+
+        // Check if we're restoring something
+        if(savedInstanceState != null) {
+            gamePlay = (GamePlay) savedInstanceState.getSerializable("GamePlayInstance");
+        }
+        else {
+            gamePlay = new GamePlay();
+        }
     }
 
     @Override
@@ -76,13 +85,30 @@ public class MainActivity extends AppCompatActivity {
         GameState gameState = gamePlay.checkForWinner();
         if(gameState == GameState.PLAYER_ONE || gameState == GameState.PLAYER_TWO) {
             makeToast(gameState.toString() + " is victorious!");
+            toggleClicks();
         }
         else if(gameState == GameState.DRAW) {
             makeToast("Nobody wins! It's a draw.");
+            toggleClicks();
         }
         else {
             Log.d("MainActivity", "no winner (yet)");
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("GamePlayInstance", gamePlay);
+    }
+
+    public void toggleClicks(){
+        // In an ideal world, this works, but alas
+        gl.setClickable(!gl.isClickable());
+    }
+
+    public void restoreUI(){
+        // something to restore the state of buttons?
     }
 
     /* Updates the "tile" to show the correct sign. */
@@ -102,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void makeToast(String toastText) {
-        Toast toast = Toast.makeText(getApplicationContext(), toastText,Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), toastText,Toast.LENGTH_SHORT);
         toast.show();
     }
 

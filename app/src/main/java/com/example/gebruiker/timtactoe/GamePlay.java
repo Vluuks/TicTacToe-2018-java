@@ -3,11 +3,13 @@ package com.example.gebruiker.timtactoe;
 import android.content.Context;
 import android.widget.GridLayout;
 
+import java.io.Serializable;
+
 /**
  * Created by Gebruiker on 7-2-2018.
  */
 
-public class GamePlay {
+public class GamePlay implements Serializable {
 
     Context context;
     GridLayout tileLayout;
