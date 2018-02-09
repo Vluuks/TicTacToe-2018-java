@@ -12,10 +12,13 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     GamePlay gamePlay;
     GridLayout gl;
+    Button[] buttonArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +27,29 @@ public class MainActivity extends AppCompatActivity {
 
         gl = findViewById(R.id.tileLayout);
 
+        // Initialize array to store buttons, for state res purposes
+        buttonArray = new Button[]{
+                findViewById(R.id.button0),
+                findViewById(R.id.button1),
+                findViewById(R.id.button2),
+                findViewById(R.id.button3),
+                findViewById(R.id.button4),
+                findViewById(R.id.button5),
+                findViewById(R.id.button6),
+                findViewById(R.id.button7),
+                findViewById(R.id.button8)
+        };
+
         // Check if we're restoring something
         if(savedInstanceState != null) {
             gamePlay = (GamePlay) savedInstanceState.getSerializable("GamePlayInstance");
+            restoreUI();
         }
         else {
             gamePlay = new GamePlay();
         }
+
+
     }
 
     @Override
@@ -107,8 +126,14 @@ public class MainActivity extends AppCompatActivity {
         gl.setClickable(!gl.isClickable());
     }
 
-    public void restoreUI(){
+    public void restoreUI() {
+        Log.d("reset UI called", "nice");
+
         // something to restore the state of buttons?
+        for (Button button : buttonArray) {
+            button.setText("nice test");
+            Log.d("in loop", "yo");
+        }
     }
 
     /* Updates the "tile" to show the correct sign. */

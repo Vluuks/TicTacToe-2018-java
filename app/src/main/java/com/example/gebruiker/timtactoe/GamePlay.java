@@ -1,6 +1,7 @@
 package com.example.gebruiker.timtactoe;
 
 import android.content.Context;
+import android.service.quicksettings.Tile;
 import android.widget.GridLayout;
 
 import java.io.Serializable;
@@ -65,6 +66,14 @@ public class GamePlay implements Serializable {
         }
 
         return type;
+    }
+
+    public TileType getTileContent(int row, int column){
+
+
+
+
+        return TileType.INVALID;
     }
 
     /* Resets the board to empty again and makes it player one's turn. */
