@@ -123,7 +123,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void toggleClicks(){
         // In an ideal world, this works, but alas
-        gl.setClickable(!gl.isClickable());
+
+        for (Button button : buttonArray) {
+            button.setClickable(!button.isClickable());
+        }
     }
 
     public void restoreUI() {
