@@ -86,6 +86,7 @@ public class GamePlay implements Serializable {
         gameOver = false;
         tiles = new int[BOARD_SIZE][BOARD_SIZE];
         playerOneTurn = true;
+        movesPlayed = 0;
 
     }
 
