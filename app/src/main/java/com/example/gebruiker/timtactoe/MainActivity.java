@@ -44,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
         if(savedInstanceState != null) {
             gamePlay = (GamePlay) savedInstanceState.getSerializable("GamePlayInstance");
             restoreUI();
+
+            if(gamePlay.isGameOver()) {
+                toggleClicks();
+            }
         }
         else {
             gamePlay = new GamePlay();

@@ -23,7 +23,7 @@ public class GamePlay implements Serializable {
     // Global so win function can access them
     int tileRow, tileColumn;
 
-    public GamePlay(){
+    public GamePlay() {
 
         tiles = new int[BOARD_SIZE][BOARD_SIZE];
 
@@ -69,7 +69,7 @@ public class GamePlay implements Serializable {
     }
 
     /* Returns content of a given tile, for the state restoration. */
-    public TileType getTileContent(int row, int column){
+    public TileType getTileContent(int row, int column) {
 
         if(tiles[row][column] == 1) {
             return TileType.CROSS;
@@ -81,8 +81,9 @@ public class GamePlay implements Serializable {
     }
 
     /* Resets the board to empty again and makes it player one's turn. */
-    public void resetGame(){
+    public void resetGame() {
 
+        gameOver = false;
         tiles = new int[BOARD_SIZE][BOARD_SIZE];
         playerOneTurn = true;
 
@@ -116,6 +117,7 @@ public class GamePlay implements Serializable {
                 break;
             }
             if(i == BOARD_SIZE - 1) {
+                gameOver = true;
                 return winner;
             }
         }
@@ -126,17 +128,19 @@ public class GamePlay implements Serializable {
                 break;
             }
             if(i == BOARD_SIZE - 1) {
+                gameOver = true;
                 return winner;
             }
         }
 
         // Check diagonal left to right
-        if(tileRow == tileColumn){
+        if(tileRow == tileColumn) {
             for(int i = 0; i < BOARD_SIZE; i++) {
-                if(tiles[i][i] != currentPlayerTile){
+                if(tiles[i][i] != currentPlayerTile) {
                     break;
                 }
                 if(i == BOARD_SIZE - 1) {
+                    gameOver = true;
                     return winner;
                 }
             }
@@ -151,16 +155,22 @@ public class GamePlay implements Serializable {
                     break;
                 }
                 if(i == BOARD_SIZE - 1) {
+                    gameOver = true;
                     return winner;
                 }
             }
         }
 
         // If nobody has won yet at 9 moves, it's a draw
-        if(movesPlayed == 9){
+        if(movesPlayed == 9) {
+            gameOver = true;
             return GameState.DRAW;
         }
 
         return GameState.IN_PROGRESS;
+    }
+
+    public Boolean isGameOver() {
+        return gameOver;
     }
 }
