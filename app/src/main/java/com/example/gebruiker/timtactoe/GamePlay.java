@@ -68,12 +68,16 @@ public class GamePlay implements Serializable {
         return type;
     }
 
+    /* Returns content of a given tile, for the state restoration. */
     public TileType getTileContent(int row, int column){
 
-
-
-
-        return TileType.INVALID;
+        if(tiles[row][column] == 1) {
+            return TileType.CROSS;
+        }
+        else if(tiles[row][column] == 2) {
+            return TileType.CIRCLE;
+        }
+        return TileType.BLANK;
     }
 
     /* Resets the board to empty again and makes it player one's turn. */

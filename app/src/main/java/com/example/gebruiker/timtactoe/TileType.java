@@ -6,5 +6,5 @@ package com.example.gebruiker.timtactoe;
  */
 
 public enum TileType {
-    CROSS, CIRCLE, INVALID
+    BLANK, CROSS, CIRCLE, INVALID
 }

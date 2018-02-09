@@ -133,6 +133,37 @@ public class MainActivity extends AppCompatActivity {
         for (Button button : buttonArray) {
             button.setText("nice test");
             Log.d("in loop", "yo");
+
+            // This is so hideous i might cry
+            switch(button.getId()){
+                case R.id.button0:
+                    updateTile(button, gamePlay.getTileContent(0, 0));
+                    break;
+                case R.id.button1:
+                    updateTile(button, gamePlay.getTileContent(0, 1));
+                    break;
+                case R.id.button2:
+                    updateTile(button, gamePlay.getTileContent(0, 2));
+                    break;
+                case R.id.button3:
+                    updateTile(button, gamePlay.getTileContent(1, 0));
+                    break;
+                case R.id.button4:
+                    updateTile(button, gamePlay.getTileContent(1, 1));
+                    break;
+                case R.id.button5:
+                    updateTile(button, gamePlay.getTileContent(1, 2));
+                    break;
+                case R.id.button6:
+                    updateTile(button, gamePlay.getTileContent(2, 0));
+                    break;
+                case R.id.button7:
+                    updateTile(button, gamePlay.getTileContent(2, 1));
+                    break;
+                case R.id.button8:
+                    updateTile(button, gamePlay.getTileContent(2, 2));
+                    break;
+            }
         }
     }
 
@@ -141,14 +172,19 @@ public class MainActivity extends AppCompatActivity {
 
         Button b = (Button) view;
 
-        if (tileType == TileType.CIRCLE) {
-            b.setText("O");
-        }
-        else if (tileType == TileType.CROSS) {
-            b.setText("X");
-        }
-        else {
-            makeToast("That's an illegal move.");
+        switch(tileType){
+            case CIRCLE:
+                b.setText("O");
+                break;
+            case CROSS:
+                b.setText("X");
+                break;
+            case BLANK:
+                b.setText("");
+                break;
+            case INVALID:
+                makeToast("Illegal move");
+                break;
         }
     }
 
